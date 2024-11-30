@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codice Fiscale</title>
+</head>
+<body>
+    <div class="flex-row xy-centered main-containers" id="main-container-form">
+        <div class="flex-column container-component">
+            <div class="flex-column xy-centered form-container">
+                <div class="flex-column xy-centered title-container">
+                    <h1 class="title">Modulo</h1>
+                    <hr>
+                </div>
+                <form id="form" onsubmit="createNewCode(event)">
+                    <div class="flex-row input-container">
+                        <label for="name">Nome:</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="flex-row input-container">
+                        <label for="surname">Cognome:</label>
+                        <input type="text" id="surname" required>
+                    </div>
+                    <div class="flex-row input-container">
+                        <label for="gender">Sesso:</label>
+                        <select id="gender">
+                            <option value="none"> </option>
+                            <option value="male">Uomo</option>
+                            <option value="female">Donna</option>
+                        </select>
+                    </div>
+                    <div class="flex-row input-container">
+                        <label for="bornDate">Data di nascita:</label>
+                        <input type="date" id="bornDate" required>
+                    </div>
+                    <div class="flex-row input-container">
+                        <label for="bornPlace">Luogo di nascita:</label>
+                        <select id="bornPlace">
+                            <option value="testingValue">Testing</option>
+                        </select>
+                    </div>
+                    <div class="flex-column xy-centered submit-btn-container">
+                        <input type="submit" class="primary-btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
