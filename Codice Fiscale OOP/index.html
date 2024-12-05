@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="../styles/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="scripts/script.js"></script>
     <title>Codice Fiscale</title>
 </head>
 <body>
@@ -14,14 +15,24 @@
                     <h1 class="title">Modulo</h1>
                     <hr>
                 </div>
-                <form id="form" onsubmit="createNewCode(event)">
+                <form id="form" onsubmit="sendForm(event)">
                     <div class="flex-row input-container">
                         <label for="name">Nome:</label>
-                        <input type="text" id="name" required>
+                        <input 
+                        type="text" 
+                        id="name" 
+                        title="Sono ammessi unicamente spazi e lettere."
+                        placeholder="Nome..."
+                        required>
                     </div>
                     <div class="flex-row input-container">
                         <label for="surname">Cognome:</label>
-                        <input type="text" id="surname" required>
+                        <input 
+                        type="text" 
+                        id="surname"
+                        title="Sono ammessi unicamente spazi e lettere."
+                        placeholder="Cognome..."
+                        required>
                     </div>
                     <div class="flex-row input-container">
                         <label for="gender">Sesso:</label>
@@ -32,12 +43,16 @@
                         </select>
                     </div>
                     <div class="flex-row input-container">
-                        <label for="bornDate">Data di nascita:</label>
-                        <input type="date" id="bornDate" required>
+                        <label for="birthDate">Data di nascita:</label>
+                        <input 
+                        type="date" 
+                        id="birthDate" 
+                        min="1900-01-01"
+                        required>
                     </div>
                     <div class="flex-row input-container">
-                        <label for="bornPlace">Luogo di nascita:</label>
-                        <select id="bornPlace">
+                        <label for="birthPlace">Luogo di nascita:</label>
+                        <select id="birthPlace">
                             <option value="testingValue">Testing</option>
                         </select>
                     </div>
