@@ -1,114 +1,106 @@
 function sendForm(event){
     // Prevengo il ricaricamento della pagina all'invio del form
     event.preventDefault();
-    let finalResult = ''
-
-    namesChecker([document.getElementById('name'), document.getElementById('surname')])
+    console.log('sent')
+    const user = new User(
+        document.getElementById('name'), 
+        document.getElementById('surname'), 
+        document.getElementById('birthDate'), 
+        document.getElementById('gender')
+    );
+    
+    console.log(user);
+    console.log(user.generatePersonalCode());
 }
 
 // Constructor che crea un oggetto User personalizzato
 class User {
     // Proprietà dell'oggetto:
-    constructor() {
-        this.name;
-        this.surname;
-        this.birthDate;
-        this.gender;
-        this.generatePersonalCode = () => {
-            let finalResult = '';
-            finalResult += namesManipulator(this.name);
-            finalResult += namesManipulator(this.surname);
-            finalResult += dateManipulator(this.birthDate);
-            console.log(finalResult)
-        }
+    constructor(nameElement, surnameElement, birthDateElement, genderElement) {
+        this.name = {
+            firstName: this.#namesValidator(nameElement),
+            consonants: () => { 
+                const consonantsArray = this.name.firstName.match(/[B-DF-HJ-NP-TV-Z]/g); 
+                return consonantsArray.length;
+            }
+        };
+        this.surname = this.#namesValidator(surnameElement);
+        this.gender = this.#genderValidator(genderElement);
+        this.birthDate = this.#dateValidator(birthDateElement);
     }
 
-    // Setters per le proprietà:
-    // Prima di passare gli input ne controllo tramite apposite funzioni la validità    
-    set setName(input) {
-        this.name = namesChecker(input);
+    generatePersonalCode = () => {
+        let finalResult = '';
+        finalResult += namesManipulator(this.surname, false);
+        finalResult += namesManipulator(this.name, true);
+        finalResult += dateManipulator(this.birthDate);
+        console.log(finalResult)
     }
 
-    set setSurname(input) {
-        this.surname = namesChecker(input);
-    }
-
-    set setBirthDate(input) {
-        this.birthDate = dateChecker(input);
-    }
-
-    set setGender(input) {
-        this.gender = genderChecker(input);
-    }
-}
-
-// Controllo validità di input name e surname
-function namesChecker(input) {
-    // Uso regex per ricercare un pattern specifico nella stringa di input
-    // Regex: \w+ (parole), \s? (spazio opzionale)
-    const checkRegex = /\w+\s?/g
-    // Uso test() per cercare il pattern nella stringa
-    if(checkRegex.test(input.value)){
-        // Se pattern ritrovato nella stringa allora viene ritornato il valore e poi assegnato a this.name
-        return input.value;
-    }else{
-        // Se non è ritrovato il pattern allora il bordo del campo input diventa rosso
-        input.style.borderColor = 'red';
-        alert('Inserire un testo valido.\nSono ammesse unicamente lettere e spazi.');
-        input.value = '';
-    }
-}
-
-function dateChecker(input) {
-    // Creo un'istanza dell'oggetto Date
-    let todayDate = new Date();
-    // Array che contiene l'anno, il mese e il giorno di oggi
-    // getMonth() ritorna il mese da 0 a 11 quindi aggiungo 1 per avere un valore valido.
-    const today = [todayDate.getFullYear(), todayDate.getMonth()+1, todayDate.getDate()]
-    // Creo un array che contiene l'anno, il mese e il giorno selezionati dall'utente
-    const birth = input.value.split('-');
-
-    // CORREGGERE:
-    // CONTROLLARE SE ANNOi > ANNOo
-    // SE UGUALI CONTROLLARE MESEi > MESEo
-    // SE UGUALI CONTROLLARE GIORNOi > GIORNOo
-    birth.forEach((element, index) => {
-        element = parseInt(element);
-
-        if(element > parseInt(today[index])){
+    // # prefisso che indica il metodo come privato e quindi non chiamabile dall'esterno
+    #namesValidator(input){
+        // Uso regex per ricercare un pattern specifico nella stringa di input
+        // Regex: [A-Za-z] (tutte le lettere maiuscole e minuscole), \s? (spazio opzionale)
+        const checkRegex = /[A-Za-z]+\s?/g
+        // Uso test() per cercare il pattern nella stringa
+        if(checkRegex.test(input.value)){
+            // Se pattern ritrovato nella stringa allora viene ritornato il valore e poi assegnato a this.name
+            return input.value.toUpperCase();
+        }else{
+            // Se non è ritrovato il pattern allora il bordo del campo input diventa rosso
             input.style.borderColor = 'red';
-            alert('Inserire una data passata.');
+            alert('Inserire un testo valido.\nSono ammesse unicamente lettere e spazi.');
+            input.value = '';
+        } 
+    }
+
+    #dateValidator(input) {
+        // Creo un'istanza dell'oggetto Date
+        let todayDate = new Date();
+        // Creo un array che contiene l'anno, il mese e il giorno selezionati dall'utente
+        const birth = input.value.split('-');
+        // Creo una nuova istanza di Date con i parametri anno, mese e giorno
+        const birthObj = new Date(parseInt(birth[0]), parseInt(birth[1])-1, parseInt(birth[2]));
+        
+        // Effettuo la comparazione tra la data inserita e la data di oggi, se l'input riferisce una data futura ritorna un errore
+        if (birthObj > todayDate) {
+            input.style.borderColor = 'red';
+            alert('Inserire una data passata');
             input.value = '';
             return;
         }
 
-    });
-
-    // Ritorno l'array della data scelta dall'utente
-    return birth;
-}
-
-function genderChecker(input) {
-    // Se viene selezionata l'opzione nulla da' errore
-    if(input.value === 'none'){
-        input.style.borderColor = 'red';
-        alert('Inserire un valore valido nel campo "Sesso".');
-        input.value = '';
-    }else{
-        return input.value;
+        // Ritorno l'array della data scelta dall'utente
+        return birth;
     }
+
+    #genderValidator(input) {
+        // Se viene selezionata l'opzione nulla da' errore
+        if(input.value === 'none'){
+            input.style.borderColor = 'red';
+            alert('Inserire un valore valido nel campo "Sesso".');
+            input.value = '';
+        }else{
+            return input.value;
+        }
+    }
+
 }
 
 
-
-function namesManipulator(value){
+function namesManipulator(value, isName){
+    // Numero di iterazioni standard
+    let sectionLength = 3;
     let result = '';
 
-    console.log(value)
-    // Transformo la stringa in maiuscolo
-    value = value.toUpperCase();
-    
-    for(let i = 0; i<3; i++){
+    // Se sta venendo trattato il nome si controllano il numero di consonanti e se superano 4 si aumenta di uno il ciclo for seguente
+    if(isName){
+        sectionLength = value.consonants() >= 4 ? 4 : 3;
+        // value diventa la sottoproprietà di name perché questa contiene effettivamente il nome utente
+        value = value.firstName; 
+    }
+
+    for(let i = 0; i<sectionLength; i++){
         // Uso un regex per il pattern che riconosce unicamente consonanti, precisamente la prima in ordine di apparizione
         const consonantsRegex = /[B-DF-HJ-NP-TV-Z]/
         // Regex per il pattern, riconosco la prima vocale che appare nella stringa
@@ -116,22 +108,27 @@ function namesManipulator(value){
         let matchIndex;
 
         if(consonantsRegex.test(value)){
+            // Se il numero di iterazioni è 4 ed è la seconda iterazione salta solo quest'ultima
+            if(i === 1 && sectionLength === 4){
+                continue;
+            }
             // Salvo l'indice del primo carattere che appartiene al pattern di consonantsRegex
             matchIndex = value.search(consonantsRegex);
             // Aggiungo al risultato il carattere nella posizione dell'indice salvato prima
             result += value[matchIndex];
             // Cancello il carattere aggiunto al risultato dalla stringa iniziale
             value = value.replace(value[matchIndex], '');
+
         }else if(vowelsRegex.test(value)) {
             matchIndex = value.search(vowelsRegex);
             result += value[matchIndex];
             value = value.replace(value[matchIndex], '');
         }else{
-            // Nel caso in cui non siano rimaste né vocali né consonanti allora aggiunge una X
-            result += 'X'
+        // Nel caso in cui non siano rimaste né vocali né consonanti allora aggiunge una X
+        result += 'X';
         }
     }
-
+    console.log(result)
     return result;
 }
 
@@ -163,5 +160,3 @@ function dateManipulator(birthDate){
 
     return result;
 }
-
-const user = new User()
