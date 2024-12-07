@@ -25,6 +25,7 @@ p {
 .main-containers {
     width: 100%;
     height: 97vh;
+    background-color: blueviolet;
 }
 
 .container-component {
@@ -124,4 +125,61 @@ label {
 #result {
     width: 100%;
     text-align: center;
+}
+
+@media only screen and (max-width: 375px), screen and (max-height: 667px) {
+    .container-component {
+        width: 80%;
+        min-height: 45%;
+    } 
+
+    .title {
+        font-size: 1em;
+    }
+
+    label, .primary-btn, .secondary-btn, .tertiary-btn {
+        font-size: 0.8em;
+    }
+
+    select, input {
+        font-size: 0.8em; 
+    }
+}
+
+@media only screen and (max-width: 414px), screen and (max-height: 896px) {
+    .container-component {
+        width: 90%;
+        min-height: 35%;
+    } 
+
+    .title {
+        font-size: 1.7em;
+    }
+
+    label, .primary-btn, .secondary-btn, .tertiary-btn {
+        font-size: 1em;
+    }
+
+    select, input {
+        font-size: 1em; 
+    }
+}
+
+@media only screen and (max-width: 430px), screen and (max-height: 932px) {
+    .container-component {
+        width: 90%;
+        min-height: 35%;
+    } 
+
+    .title {
+        font-size: 1.7em;
+    }
+
+    label, .primary-btn, .secondary-btn, .tertiary-btn {
+        font-size: 1em;
+    }
+
+    select, input {
+        font-size: 1em; 
+    }
 }
