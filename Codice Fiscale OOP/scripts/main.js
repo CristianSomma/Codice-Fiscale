@@ -19,8 +19,10 @@ class User {
         let finalResult = '';
         finalResult += this.#namesManipulator(this.surname, false);
         finalResult += this.#namesManipulator(this.name, true);
-        finalResult += this.#dateManipulator(this.birthDate);
-        console.log(finalResult)
+        finalResult += this.#dateManipulator(this.birthDate, this.gender);
+        finalResult += this.#placeManipulator(this.birthPlace);
+        finalResult += this.#checkDigit(finalResult);
+        return finalResult;
     }
 
     // # prefisso che indica il metodo come privato e quindi non chiamabile dall'esterno
@@ -72,6 +74,23 @@ class User {
     }
 
     #placeValidator(input){
+        input.value = input.value.toUpperCase();
+        let result = false;
+        let code;
+
+        valuesJSON.forEach(value => {
+            if(value.name === input.value){
+                result = true;
+            }
+        });
+
+        if(result){
+            return input.value;
+        }else{
+            input.style.borderColor = 'red';
+            alert('Comune inserito non trovato.')
+            input.value = '';
+        }
 
     }
 
@@ -121,7 +140,7 @@ class User {
         
     }
 
-    #dateManipulator(birthDate){
+    #dateManipulator(birthDate, gender){
         let result = '';
         
         // Oggetto che mette in relazione il numero del mese alla relativa lettera
@@ -144,16 +163,112 @@ class User {
         result += birthDate[0].slice(2, 4);
         // Aggiungo al risultato il valore (lettera) relativo alla chiave (numero del mese) 
         result += relativeAlphas[birthDate[1]];
-        // Aggiungo al risultato l'ultimo elemento dell'array ovvero il giorno
-        result += birthDate[2]; 
+        // Aggiungo al risultato l'ultimo elemento dell'array ovvero il giorno, se femmina sommo alla data 40
+        result += (gender === 'FEMALE') ? parseInt(birthDate[2])+40 : birthDate[2];
 
         return result;
     }
 
     #placeManipulator(birthPlace){
-        //...
+        let code = "";
+        // Per ogni elemento nel file JSON
+        valuesJSON.forEach(value => {
+            // Se il value della key name equivale a birthPlace allora assegna il value di code alla var
+            if(value.name === birthPlace){
+                code = value.code;                                
+            }
+        })
+
+        // Ritorna il codice catastale
+        return code;
+    }
+
+    #checkDigit(code) {
+        const alphabet  = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z'
+        ];
+
+        let sum = 0;
+
+        for(let i = 0; i<code.length; i++){
+            if(i%2 === 0){
+                sum += this.#oddConversion(code[i]);
+            }else{
+                if(isNaN(parseInt(code[i]))){
+                    sum += alphabet.indexOf(code[i]);
+                }else{
+                    sum += parseInt(code[i]);
+                }
+            }
+        }
+
+        return alphabet[sum%26];
+    }
+
+    #oddConversion (value) {
+        const oddAlpha = {
+            '0': 1,
+            '1': 0,
+            '2': 5,
+            '3': 7,
+            '4': 9,
+            '5': 13,
+            '6': 15,
+            '7': 17,
+            '8': 19,
+            '9': 21,
+            'A': 1, 
+            'B': 0,  
+            'C': 5,  
+            'D': 7,  
+            'E': 9, 
+            'F': 13,  
+            'G': 15,  
+            'H': 17,  
+            'I': 19, 
+            'J': 21,  
+            'K': 2, 
+            'L': 4, 
+            'M': 18, 
+            'N': 20, 
+            'O': 11, 
+            'P': 3, 
+            'Q': 6, 
+            'R': 8, 
+            'S': 12, 
+            'T': 14, 
+            'U': 16, 
+            'V': 10, 
+            'W': 22, 
+            'X': 25, 
+            'Y': 24, 
+            'Z': 23
+        };
+
+        return oddAlpha[value];
     }
 }
+
+
+let valuesJSON
+document.addEventListener('DOMContentLoaded', async () => {
+    valuesJSON = await fetchJSON();
+})
+
+// La keyword async indica che la funzione agisce in maniera asincrona al normale procedimento del programma
+async function fetchJSON() {
+    let jsonValues;
+
+    // Aspetto che venga preso il file JSON e convertito prima di continuare con il resto del programma
+    await fetch('../JSON/dati.json')
+        .then(response => jsonValues = response.json())
+
+    // Ritorno il file JSON
+    return jsonValues;
+}
+
 
 function sendForm(event){
     // Prevengo il ricaricamento della pagina all'invio del form
@@ -163,9 +278,15 @@ function sendForm(event){
         document.getElementById('name'), 
         document.getElementById('surname'), 
         document.getElementById('birthDate'), 
-        document.getElementById('gender')
+        document.getElementById('gender'),
+        document.getElementById('birthPlace')
     );
-    
-    console.log(user);
-    user.generatePersonalCode();
+
+    document.getElementById('form-inputs-container').style.display = 'none';
+    document.getElementById('resultDiv').style.display = 'flex';
+    document.getElementById('resultTag').innerHTML = user.generatePersonalCode();  
+}
+
+function reset(){
+    window.location.reload();
 }

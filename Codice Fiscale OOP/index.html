@@ -16,53 +16,63 @@
                     <hr>
                 </div>
                 <form id="form" onsubmit="sendForm(event)">
-                    <div class="flex-row input-container">
-                        <label for="name">Nome:</label>
-                        <input 
-                        type="text" 
-                        id="name" 
-                        title="Sono ammessi unicamente spazi e lettere."
-                        placeholder="Nome..."
-                        required>
-                    </div>
-                    <div class="flex-row input-container">
-                        <label for="surname">Cognome:</label>
-                        <input 
-                        type="text" 
-                        id="surname"
-                        title="Sono ammessi unicamente spazi e lettere."
-                        placeholder="Cognome..."
-                        required>
-                    </div>
-                    <div class="flex-row input-container">
-                        <label for="gender">Sesso:</label>
-                        <select id="gender">
-                            <option value="none"> </option>
-                            <option value="MALE">Uomo</option>
-                            <option value="FEMALE">Donna</option>
-                        </select>
-                    </div>
-                    <div class="flex-row input-container">
-                        <label for="birthDate">Data di nascita:</label>
-                        <input 
-                        type="date" 
-                        id="birthDate" 
-                        min="1900-01-01"
-                        required>
-                    </div>
-                    <div class="flex-row input-container">
-                        <label for="birthPlace">Luogo di nascita:</label>
-                        <input 
-                        type="text" 
-                        id="birthPlace"
-                        title="Inserire il nome del paese di nascita"
-                        placeholder="Luogo..."
-                        required>
+                    <div id="form-inputs-container">
+                        <div class="flex-row input-container">
+                            <label for="name">Nome:</label>
+                            <input 
+                            type="text" 
+                            name="name"
+                            id="name" 
+                            title="Sono ammessi unicamente spazi e lettere."
+                            placeholder="Nome..."
+                            required>
+                        </div>
+                        <div class="flex-row input-container">
+                            <label for="surname">Cognome:</label>
+                            <input 
+                            type="text"
+                            name="surname" 
+                            id="surname"
+                            title="Sono ammessi unicamente spazi e lettere."
+                            placeholder="Cognome..."
+                            required>
+                        </div>
+                        <div class="flex-row input-container">
+                            <label for="gender">Sesso:</label>
+                            <select name="gender" id="gender">
+                                <option value="none"> </option>
+                                <option value="MALE">Uomo</option>
+                                <option value="FEMALE">Donna</option>
+                            </select>
+                        </div>
+                        <div class="flex-row input-container">
+                            <label for="birthDate">Data di nascita:</label>
+                            <input 
+                            type="date" 
+                            name="birthDate"
+                            id="birthDate" 
+                            min="1900-01-01"
+                            required>
+                        </div>
+                        <div class="flex-row input-container">
+                            <label for="birthPlace">Luogo di nascita:</label>
+                            <input 
+                            type="text" 
+                            name="birthPlace"
+                            id="birthPlace"
+                            title="Inserire il nome del paese di nascita"
+                            placeholder="Luogo..."
+                            required>
                     </div>
                     <div class="flex-column xy-centered submit-btn-container">
-                        <input type="submit" class="primary-btn">
+                        <input type="submit" id="submit-btn" class="primary-btn">
+                    </div>
                     </div>
                 </form>
+                <div class="flex-column xy-centered" id="resultDiv">
+                    <h1 class="title" id="resultTag"></h1>
+                    <button onclick="reset()" class="secondary-btn">Genera nuovo codice fiscale</button>
+                </div>
             </div>
         </div>
     </div>
